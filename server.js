@@ -11,8 +11,14 @@ app.get('/', (req, res) => {
     res.send('welcome to an awesome app about breads')
 });
 
+//bread routes
+const breadsController = require('./controllers/breads_controller.js')
+app.use('/breads', breadsController)
+
+
 //listen
 app.listen(PORT, () => {
     console.log('listening on point', PORT);
 });
+
 
