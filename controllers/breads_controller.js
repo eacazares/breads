@@ -2,14 +2,13 @@ const express = require('express')
 const breads = express.Router()
 const Bread = require('../models/bread.js')
 
-//index
+//INDEX
 breads.get('/', (req, res) => {
     //res.send(Bread)
     res.render('index', 
     {
         breads: Bread
-    }
-    )
+    })
 })
 
 //NEW
@@ -17,7 +16,15 @@ breads.get('/new', (req, res) => {
     res.render('new')
 })
 
-//show
+  // EDIT
+  breads.get('/:indexArray/edit', (req, res) => {
+    res.render('edit', {
+      bread: Bread[req.params.indexArray],
+      index: req.params.indexArray
+    })
+  })
+
+//SHOW
 breads.get('/:arrayIndex', (req, res) => {
     if (Bread[req.params.arrayIndex]) {
         res.render('show', {
@@ -29,17 +36,6 @@ breads.get('/:arrayIndex', (req, res) => {
     }
 })
 
-//create
-// breads.post('/', (req, res) => {
-//     console.log(req.body)
-//     if(req.body.hasGluten=== 'on'){
-//         req.body.hasGluten = 'true'
-//     } else {
-//         req.body.hasGluten = 'false'
-//     }
-//     Bread.push(req.body)
-//     res.redirect('/breads')
-// })
 // CREATE
 breads.post('/', (req, res) => {
     if (!req.body.image) {
@@ -53,8 +49,21 @@ breads.post('/', (req, res) => {
     Bread.push(req.body)
     res.redirect('/breads')
   })
+
+  //UPDATE
+  breads.put('/:arrayIndex', (req, res) => {
+    if (req.body.hasGluten === 'on') {
+      req.body.hasGluten = true
+    } else {
+      req.body.hasGluten = false
+    }
+    Bread[req.params.arrayIndex] = req.body
+    res.redirect(`/breads/${req.params.arrayIndex}`)
+  })
+
+
   
-  //Delete
+  //DELETE
   breads.delete('/:indexArray', (req, res) => {
     Bread.splice(req.params.indexArray, 1)
     res.status(303).redirect('/breads')
